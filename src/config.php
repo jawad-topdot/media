@@ -1,5 +1,5 @@
 <?php 
 
 return [
-    'delete_from_db' => true,
+    'delete_from_db' => false,
 ];
