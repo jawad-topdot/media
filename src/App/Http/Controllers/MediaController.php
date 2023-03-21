@@ -2,11 +2,11 @@
 
 namespace Dotlogics\Media\App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Dotlogics\Media\App\Models\TempMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class MediaController extends Controller
 {
@@ -15,18 +15,17 @@ class MediaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'file' => 'bail|required|file|max:102400'
+        $this->validate($request, [
+            'file' => 'bail|required|file|max:102400',
         ]);
 
         $mediaStored = TempMedia::create()->addMediaFromRequest('file')->toMediaCollection('temporary');
 
-        if ( $request->has('accept_only_id') ){
+        if ($request->has('accept_only_id')) {
             return $mediaStored->model->id;
         }
 
@@ -35,17 +34,17 @@ class MediaController extends Controller
         // $url = str_replace(rtrim(url('/'), '/'), '', $url);
 
         return [
-            "location" => $url,
+            'location' => $url,
             'temp_id' => $mediaStored->model->id,
             'media_id' => $mediaStored->id,
-            'media_url' => $url
+            'media_url' => $url,
         ];
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Media $media
+     * @param  Media  $media
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $media)
@@ -58,8 +57,6 @@ class MediaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param Media $media
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Media $media)
@@ -67,48 +64,50 @@ class MediaController extends Controller
         //
     }
 
-    protected function response($success=true, $message='', $data=[],  $code=200)
+    protected function response($success = true, $message = '', $data = [], $code = 200)
     {
         return response()->json([
             'success' => $success,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
         ], $code);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Media $media
+     * @param  Media  $media
      * @return \Illuminate\Http\Response
      */
     public function destroy($media)
     {
         with(new Media)->delete();
-        return $this->response(true, "File Deleted");
+
+        return $this->response(true, 'File Deleted');
     }
 
     /**
-     * @param TempMedia|null $media
-     * @param Request $request
+     * @param  TempMedia|null  $media
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws \Exception
      */
     public function removeTemp(Request $request)
     {
         $payload = json_decode($request->getContent());
 
-        if ( !$payload instanceof \stdClass || !$payload->temp_id ){
-            return $this->response(false, "file Not found", [], 404);
+        if (! $payload instanceof \stdClass || ! $payload->temp_id) {
+            return $this->response(false, 'file Not found', [], 404);
         }
 
         $tempMedia = TempMedia::find($payload->temp_id);
 
-        if ( !$tempMedia ){
-            return $this->response(false, "file Not found", [], 404);
+        if (! $tempMedia) {
+            return $this->response(false, 'file Not found', [], 404);
         }
 
         $tempMedia->delete();
-        return $this->response(true, "File Deleted");
+
+        return $this->response(true, 'File Deleted');
     }
 }

@@ -2,14 +2,16 @@
 
 namespace Dotlogics\Media\App\Http\Livewire;
 
-use Livewire\Component;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Component;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class FilePreviewComponent extends Component
 {
     public Model $model;
+
     public string $collection;
+
     public $deleted = [];
 
     public function mount($model, $collection)
@@ -27,12 +29,12 @@ class FilePreviewComponent extends Component
 
     public function remove(Media $media)
     {
-        if(config('media.delete_from_db')){
+        if (config('media.delete_from_db')) {
             $media->delete();
             $this->model->refresh();
 
             $less = 0;
-        }else{
+        } else {
             $this->deleted[] = $media->id;
             $less = count($this->deleted);
         }

@@ -4,8 +4,8 @@ namespace Dotlogics\Media;
 
 use Dotlogics\Media\App\Http\Livewire\FilePreviewComponent;
 use Dotlogics\Media\App\Http\Livewire\TempFileUploadComponent;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
 use Livewire;
 
 class MediaServiceProvider extends ServiceProvider
@@ -39,14 +39,13 @@ class MediaServiceProvider extends ServiceProvider
         $this->setupRoutes($this->app->router);
 
         if ($this->app->runningInConsole()) {
-            $this->publishFiles();            
+            $this->publishFiles();
         }
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param \Illuminate\Routing\Router $router
      *
      * @return void
      */
